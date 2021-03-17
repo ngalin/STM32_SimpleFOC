@@ -108,7 +108,7 @@ float Encoder::getVelocity(){
   // dN - impulses received
   // Ts - sampling time - time in between function calls
   // Th - time from last impulse
-  // Th_1 - time form last impulse of the previous call
+  // Th_1 - time from last impulse of the previous call
   // only increment if some impulses received
   float dt = Ts + prev_Th - Th;
   pulse_per_second = (dN != 0 && dt > Ts/2) ? dN / dt : pulse_per_second;
@@ -183,4 +183,4 @@ void Encoder::init(){
   // change it if the mode is quadrature
   if(quadrature == Quadrature::ON) cpr = 4*cpr;
 
-}
+ }

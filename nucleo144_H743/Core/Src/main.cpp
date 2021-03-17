@@ -53,8 +53,41 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(9,5,6,8); //these pins are currently hard
 //encoder instance
 Encoder encoder = Encoder(2, 3, 800); //these pins, and values are actually hard coded
 float start_angle = 0.0; //[rad]
-
-
+//float vane_pos_inc[] = {0, 0.1, 1.571, 0.556, 3.142, 0.1, 4.712, 0.1};
+float vane_pos_inc[] = { 0, 0.010, 0.010, 0.010, 0.010, 0.011, 0.011, 0.011, 0.011,
+		0.012, 0.012, 0.012, 0.012, 0.013,0.013, 0.013, 0.013, 0.013, 0.013,
+		0.014, 0.014, 0.014, 0.014, 0.014, 0.014, 0.014, 0.015, 0.014, 0.015,
+		0.014, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015,
+		0.015, 0.015, 0.016, 0.015, 0.015, 0.016, 0.015, 0.015, 0.016, 0.015,
+		0.016, 0.015, 0.016, 0.015, 0.015, 0.016, 0.015, 0.016, 0.015, 0.016,
+		0.015, 0.016, 0.015, 0.016, 0.015, 0.015, 0.012, 0.020, 0.010, 0.020,
+		0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.020, 0.010,
+		0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.020, 0.010,
+		0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.020, 0.010, 0.010, 0.020,
+		0.010, 0.020, 0.010, 0.020, 0.010, 0.010, 0.020, 0.010, 0.020, 0.010,
+		0.020, 0.010, 0.010, 0.020, 0.010, 0.010, 0.020, 0.010, 0.020, 0.010,
+		0.010, 0.020, 0.010, 0.010, 0.020, 0.010, 0.010, 0.020, 0.010, 0.010,
+		0.010, 0.020, 0.010, 0.010, 0.020, 0.010, 0.010, 0.010, 0.020, 0.010,
+		0.010, 0.010, 0.010, 0.020, 0.010, 0.010, 0.010, 0.010, 0.010, 0.020,
+		0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010,
+		0.020, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.000, 0.010, 0.010,
+		0.010, 0.000, 0.010, 0.010, 0.010, 0.010, 0.010, 0.000, 0.010, 0.010,
+		0.000, 0.010, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000,
+		0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000,
+		0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.010, 0.000, 0.000, 0.010,
+		0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000,
+		0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000,
+		0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010,
+		0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000,
+		0.010, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000, 0.000, 0.010, 0.000,
+		0.010, 0.000, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.000,
+		0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000,
+		0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.000,
+		0.010, 0.000, 0.010, 0.000, 0.010, 0.000, 0.010, 0.010, 0.000, 0.010,
+		0.000, 0.010, 0.010, 0.000, 0.010, 0.010, 0.000, 0.010, 0.000, 0.010,
+		0.010, 0.010, 0.000, 0.010, 0.010, 0.000, 0.010, 0.010, 0.010, 0.000,
+		0.010, 0.010, 0.010, 0.000, 0.010, 0.010, 0.010 };
+float vane_pos[] = {0, 0.5, 0.2, 0.3, 0.5, 0, 1, 0.5};
 
 /* USER CODE END PV */
 
@@ -74,10 +107,6 @@ static void MX_TIM4_Init(void);
 //- hardware specific
 void _writeDutyCycle3PWM(float dc_a,  float dc_b, float dc_c, int pinA, int pinB, int pinC){
   // transform duty cycle from [0,1] to [0,4095]
-//  _setPwm(pinA, _PWM_RANGE*dc_a, _PWM_RESOLUTION);
-//  _setPwm(pinB, _PWM_RANGE*dc_b, _PWM_RESOLUTION);
-//  _setPwm(pinC, _PWM_RANGE*dc_c, _PWM_RESOLUTION);
-
 	//TIM1->CCR1 = (int)(dc_a * _PWM_RANGE);
 //	TIM1->CCR2 = (int)(dc_b * _PWM_RANGE);
 //	TIM4->CCR4 = (int)(dc_c * _PWM_RANGE);
@@ -104,7 +133,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+   HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -135,21 +164,31 @@ int main(void)
 
   /* USER CODE END 2 */
 
-  /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   //SimpleFOC initialisations:
- // encoder.init(); //initialise encoder sensor hardware
- // motor.linkSensor(&encoder); //link the motor to the sensor
-  driver.voltage_power_supply = 24; //power supply voltage [V]
-  driver.init();
-  motor.linkDriver(&driver); //link the motor and the driver
 
- motor.voltage_limit = 3;
- motor.velocity_limit = 20;
-//  motor.voltage_sensor_align = 3; //aligning voltage [V]
-//  motor.velocity_index_search = 3; //index search velocity [rad/s]
-  motor.controller = ControlType::velocity_openloop; //set motion control loop to be used
+//  //open loop velocity control
+//  driver.voltage_power_supply = 24; //power supply voltage [V]
+//  driver.init();
+//  motor.linkDriver(&driver); //link the motor and the driver
+//  motor.voltage_limit = 3;
+//  motor.velocity_limit = 1;
+//  motor.controller = ControlType::velocity_openloop; //set motion control loop to be used
+//  motor.init(); //initialise motor
 
+//  //closed loop velocity control:
+//  encoder.init(); //initialise encoder sensor hardware
+//  motor.linkSensor(&encoder); //link the motor to the sensor
+//  driver.voltage_power_supply = 24;
+//  driver.init();
+//  //link the motor and the driver
+//  motor.linkDriver(&driver);
+//  //aligning voltage
+//  motor.voltage_sensor_align = 3;
+//  //index search velocity [rad/s]
+//  motor.velocity_index_search = 3;
+//  //set motion control loop to be used:
+//  motor.controller = ControlType::velocity;
 //  //velocity PI controller parameters
 //  motor.PID_velocity.P = 0.2;
 //  motor.PID_velocity.I = 20;
@@ -158,27 +197,80 @@ int main(void)
 //  //jerk control using voltage ramp
 //  //default value is 300 volts per sec - 0.3V per millisecond
 //  motor.PID_velocity.output_ramp = 1000;
-//
 //  //velocity low pass filtering time constant
 //  motor.LPF_velocity.Tf = 0.01;
-//
-//  //angle P controller
-//  motor.P_angle.P = 20;
-//  //maximal velocity of the position control
-//  motor.velocity_limit = 8;
+//  //initialise motor
+//  motor.init();
+//  //align sensor and start FOC
+//  motor.initFOC();
 
-  motor.init(); //initialise motor
-//  motor.initFOC(); //align encoder and start FOC
+  //closed loop position control:
+  encoder.init();
+  motor.linkSensor(&encoder);
+  driver.voltage_power_supply = 24;
+  driver.init();
+  motor.linkDriver(&driver);
+  motor.voltage_sensor_align = 3; //[V]
+  motor.velocity_index_search = 3; //[rad/s]
+  motor.controller = ControlType::angle;
+
+  motor.PID_velocity.P = 0.2;
+  motor.PID_velocity.I = 20;
+  motor.PID_velocity.D = 0;
+  motor.voltage_limit = 10;
+  motor.PID_velocity.output_ramp = 1000; //[V/s]
+
+  motor.LPF_velocity.Tf = 0.01;
+  motor.P_angle.P = 20;
+  motor.velocity_limit = 8;
+
+  motor.init();
+  motor.initFOC();
 
   _delay(1000);
+
+  int idx = 0;
+  int angle_cnt = 0;
+  float target_angle = 0.9;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//  motor.loopFOC();
-	  motor.move(3);
-	 // _delay(100);
+//	  //open loop velocity:
+//	  motor.move(1);
+
+
+//	  //closed loop velocity control
+//	  motor.loopFOC();
+//	  idx += 1;
+//	  if ((idx % 1024) == 0) {
+//		  motor.move(0.5);
+//		  HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+//	  }
+//	  if (idx >= 65536) {
+//		  idx = 1;
+//	  }
+
+	  //closed loop position control
+	  motor.loopFOC();
+	  //motor.move(target_angle);
+	  idx++;
+	  if (idx % 500 == 0) {
+		  target_angle += vane_pos_inc[angle_cnt];
+		//  target_angle = vane_pos[angle_cnt];
+		  angle_cnt++;
+		  angle_cnt = (angle_cnt%327);
+//		  if (angle_cnt >= 8) {
+//			  //angle_cnt = 0;
+//			  _delay(10000);
+//		  }
+		//  target_angle -= 5;
+		  HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+	  }
+	  if (idx % 64 == 0) {
+		  motor.move(target_angle);
+	  }
   }
   /* USER CODE END 3 */
 }
