@@ -23,8 +23,6 @@ Things to fix/change/add/general thoughts on future improvements/work:
 	| Encoder A | A2               | PC3            | GPIO_EXTI3  |
 | Encoder B | A1               | PC0            | GPIO_EXTI0  |
 	
-	
-	
 * Avoid pulse_counter overflow. Count number of rotations, and keep pulse_counter between 0 - CPR
 
 * Switch to dedicated timer hardware for encoder pulse count. Requires hardware signal re-routing. 
@@ -35,4 +33,6 @@ Unresolved questions:
 pushed out of position. Hence, motor can be successfully pushed away from target position set point. Would expect this
 not to happen. Something to do with electrical angle normalisation?
 * When switch to SimpleFOCShield v2.0.2 (using inline phase current sensing) make sure to align encoder 0 count to Iq = 0.
+* Regeneration.
+* Bandwidth of control loop - probably affects the maximum update position rate.
 
