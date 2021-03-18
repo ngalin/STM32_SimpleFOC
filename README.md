@@ -14,14 +14,17 @@ Things to fix/change/add/general thoughts on future improvements/work:
 	and these pins have the following timer connections: TIM4(CH4) / TIM1(CH1) / TIM1(CH2). 
 	Suggested change:
 	
-	Signal	/	Arduino pin names	/	STM32 pin names		/ 	Function
-	PWM A		3				PE13				TIM1(CH3)
-	PWM B		6				PE9				TIM1(CH1)
-	PWM C		5				PE11				TIM1(CH2)
-	Enable		8				PF3				GPIO_Output
-	Encoder A	A2				PC3				GPIO_EXTI3
-	Encoder B	A1				PC0				GPIO_EXTI0	
-
+	| Signal    | Arduino pin name | STM32 pin name | Function    |
+	| --------- | ---------------- | -------------- | ----------- |
+	| PWM A     | 3                | PE13           | TIM1(CH3)   |
+	| PWM B     | 6                | PE9            | TIM1(CH1)   |
+	| PWM C     | 5                | P11            | TIM1(CH2)   |
+	| Enable    | 8                | PF3            | GPIO_Output |
+	| Encoder A | A2               | PC3            | GPIO_EXTI3  |
+| Encoder B | A1               | PC0            | GPIO_EXTI0  |
+	
+	
+	
 * Avoid pulse_counter overflow. Count number of rotations, and keep pulse_counter between 0 - CPR
 
 * Switch to dedicated timer hardware for encoder pulse count. Requires hardware signal re-routing. 
@@ -31,4 +34,5 @@ Unresolved questions:
 * Operating in FOC position control, encoder pulse counter does not increment properly when motor is externally
 pushed out of position. Hence, motor can be successfully pushed away from target position set point. Would expect this
 not to happen. Something to do with electrical angle normalisation?
+* When switch to SimpleFOCShield v2.0.2 (using inline phase current sensing) make sure to align encoder 0 count to Iq = 0.
 
